@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.22)
+project(lock_free_stack)
+
+set(CMAKE_CXX_STANDARD 20)
+
+add_compile_options(-Wall -Wpedantic -Wconversion -O3)
+
+add_executable(lock_free_stack test.cpp lock_free_stack.h)
+
+target_include_directories(lock_free_stack PUBLIC ../common)
