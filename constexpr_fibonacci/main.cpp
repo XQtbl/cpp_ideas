@@ -1,7 +1,7 @@
 // Made by xqtbl
 
 #include <iostream>
-#include <tuple>
+#include <cstdlib>
 #include <utility>
 #include <array>
 
@@ -33,7 +33,14 @@ consteval auto fib<0>() {
 }
 
 int main() {
-    constexpr size_t max_n = 100;
-    auto result = seq_into_array(fib<max_n>());
+    // constexpr data should be in static storage duration
+    // to prevent copying original data in .rdata into stack.
+    static constexpr size_t max_n = 90;
+    static constexpr auto result = seq_into_array(fib<max_n>());
+
+    int n;
+    std::cin >> n;
+    std::cout << result[max_n+1-n] << '\n';
+
     std::cout << prettify(result) << '\n';
 }
