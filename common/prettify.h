@@ -18,7 +18,7 @@ concept convertible_to_chars = requires (T x) {
   std::to_chars(nullptr, nullptr, x);
 };
 
-// Prittify ranges
+// Prettify ranges
 template <std::ranges::forward_range T>
   requires (not (convertible_to_chars<T> ||
                  std::is_same_v<std::decay_t<T>, std::string> ||
@@ -40,7 +40,7 @@ std::ostream& operator<<(std::ostream& os, const T& rng) {
   return os;
 }
 
-// Prittify tuples
+// Prettify tuples
 template<typename... Types>
 std::ostream& operator<<(std::ostream& os, const std::tuple<Types...>& tpl) {
   auto print_elements = [&]() {
@@ -66,7 +66,7 @@ std::ostream& operator<<(std::ostream& os, const std::tuple<Types...>& tpl) {
   return os;
 }
 
-// Prittify pairs
+// Prettify pairs
 template<typename T, typename U>
 std::ostream& operator<<(std::ostream& os, const std::pair<T,U>& p) {
     os << '(' << p.first << ',' << p.second << ')';
