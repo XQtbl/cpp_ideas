@@ -44,26 +44,25 @@ std::ostream& operator<<(std::ostream& os, const T& rng) {
 }
 
 // Prettify tuples
+namespace details {
+  template <std::size_t N = 0, bool first = true, typename... Types>
+  std::ostream& print_tuple_elements(std::ostream& os, const std::tuple<Types...>& tpl) {
+      if constexpr (N < sizeof...(Types)) {
+          if constexpr (not first) {
+              os << ',';
+          }
+          os << std::get<N>(tpl);
+          print_tuple_elements<N+1,false>(os, tpl);
+      }
+
+      return os;
+  }
+}
+
 template<typename... Types>
 std::ostream& operator<<(std::ostream& os, const std::tuple<Types...>& tpl) {
-  auto print_elements = [&]() {
-    auto inner = [&]<std::size_t N = 0, bool first = true>(const auto self) {
-      if constexpr (not (N < sizeof...(Types))) return;
-      else {
-        if constexpr (not first) {
-          os << ',';
-        }
-        os << std::get<N>(tpl);
-
-        self.template operator()<N+1,false>(self);
-      }
-    };
-
-    inner.operator()(inner);
-  };
-
   os << '(';
-  print_elements();
+  details::print_tuple_elements(os, tpl);
   os << ')';
 
   return os;
