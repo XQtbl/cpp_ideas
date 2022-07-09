@@ -47,15 +47,15 @@ std::ostream& operator<<(std::ostream& os, const T& rng) {
 namespace details {
   template <std::size_t N = 0, bool first = true, typename... Types>
   std::ostream& print_tuple_elements(std::ostream& os, const std::tuple<Types...>& tpl) {
-      if constexpr (N < sizeof...(Types)) {
-          if constexpr (not first) {
-              os << ',';
-          }
-          os << std::get<N>(tpl);
-          print_tuple_elements<N+1,false>(os, tpl);
+    if constexpr (N < sizeof...(Types)) {
+      if constexpr (not first) {
+        os << ',';
       }
+      os << std::get<N>(tpl);
+      print_tuple_elements<N+1,false>(os, tpl);
+    }
 
-      return os;
+    return os;
   }
 }
 
