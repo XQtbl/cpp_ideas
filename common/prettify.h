@@ -6,6 +6,8 @@
 #include <ostream>
 #include <tuple>
 #include <utility>
+#include <string_view>
+#include <string>
 
 // Forward decls
 template<typename... Types>
@@ -22,6 +24,7 @@ concept convertible_to_chars = requires (T x) {
 template <std::ranges::forward_range T>
   requires (not (convertible_to_chars<T> ||
                  std::is_same_v<std::decay_t<T>, std::string> ||
+                 std::is_same_v<std::decay_t<T>, std::string_view> ||
                  std::is_same_v<std::decay_t<T>, char*>))
 std::ostream& operator<<(std::ostream& os, const T& rng) {
   os << '[';
