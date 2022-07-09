@@ -2,8 +2,8 @@
 // Created by xqtbl on 22. 5. 14.
 //
 
-#ifndef CPP20_LEARNING_CURRYING_H
-#define CPP20_LEARNING_CURRYING_H
+#ifndef CPP_IDEAS_CURRYING_H
+#define CPP_IDEAS_CURRYING_H
 template <typename T>
 struct curry_result {
     constexpr curry_result(T val): value{val} {}

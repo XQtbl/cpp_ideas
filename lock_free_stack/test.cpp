@@ -3,6 +3,8 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <thread>
+#include <array>
 
 #include <prettify.h>
 #include "lock_free_stack.h"
@@ -14,8 +16,8 @@ int main() {
     lock_free_stack<int, std::vector> s;
 //     lock_free_stack<int, arr> s;
     {
-        std::array<std::jthread, 16> threads;
-        for (auto &&t: threads) {
+        std::array<std::jthread, 16> threads{};
+        for (auto&& t : threads) {
             t = std::jthread([](lock_free_stack<int, std::vector> &s) {
                 for (auto i : std::views::iota(1) | std::views::take(10)) {
                     s.push(i);
@@ -24,7 +26,7 @@ int main() {
         }
     }
 
-    std::cout << "내부 데이터: " << prettify(s.get_container()) << '\n';
+    std::cout << "내부 데이터: " << s.get_container() << '\n';
     std::cout << "0이 아닌 데이터 갯수: " << std::ranges::count_if(s.get_container(), [](auto& e) {return e != 0;}) << '\n';
     std::cout << "기록된 사이즈: " << s.size() << '\n';
 

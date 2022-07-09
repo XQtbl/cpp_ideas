@@ -5,7 +5,7 @@
 #include <utility>
 #include <array>
 
-#include "../common/prettify.h"
+#include <prettify.h>
 
 template <size_t... PrevSeq, size_t SecondPrev, size_t FirstPrev>
 consteval std::integer_sequence<size_t, SecondPrev+FirstPrev, FirstPrev, SecondPrev, PrevSeq...>  next_fib(std::integer_sequence<size_t, FirstPrev, SecondPrev, PrevSeq...>) {
@@ -42,5 +42,5 @@ int main() {
     std::cin >> n;
     std::cout << result[max_n+1-n] << '\n';
 
-    std::cout << prettify(result) << '\n';
+    std::cout << result << '\n';
 }

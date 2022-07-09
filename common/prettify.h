@@ -1,28 +1,76 @@
-//
-// Created by xqtbl on 22. 5. 14.
-//
+#ifndef CPP_IDEAS_PRETTIFY_H
+#define CPP_IDEAS_PRETTYFY_H
 
-#ifndef CPP20_LEARNING_PRETTIFY_H
-#define CPP20_LEARNING_PRETTIFY_H
 #include <ranges>
-#include <string>
-#include <sstream>
+#include <charconv>
+#include <ostream>
+#include <tuple>
+#include <utility>
 
-template <std::ranges::input_range T>
-std::string prettify(T&& data) {
-    auto ss = std::ostringstream{};
+// Forward decls
+template<typename... Types>
+std::ostream& operator<<(std::ostream&, const std::tuple<Types...>&);
+template<typename T, typename U>
+std::ostream& operator<<(std::ostream&, const std::pair<T,U>&);
 
-    ss << '[';
+template <typename T>
+concept convertible_to_chars = requires (T x) {
+  std::to_chars(nullptr, nullptr, x);
+};
 
-    for (auto first = true; auto&& element : data) {
-        if (first) [[unlikely]] first = false;
-        else [[likely]] ss << ", ";
-
-        ss << element;
+// Prittify ranges
+template <std::ranges::forward_range T>
+  requires (not (convertible_to_chars<T> ||
+                 std::is_same_v<std::decay_t<T>, std::string> ||
+                 std::is_same_v<std::decay_t<T>, char*>))
+std::ostream& operator<<(std::ostream& os, const T& rng) {
+  os << '[';
+  for (bool first = true; auto& element : rng) {
+    if (first) {
+      first = false;
     }
-
-    ss << ']';
-
-    return ss.str();
+    else {
+      os << ',';
+    }
+    
+    os << element;
+  }
+  os << ']';
+  
+  return os;
 }
-#endif //CPP20_LEARNING_PRETTIFY_H
+
+// Prittify tuples
+template<typename... Types>
+std::ostream& operator<<(std::ostream& os, const std::tuple<Types...>& tpl) {
+  auto print_elements = [&]() {
+    auto inner = [&]<std::size_t N = 0, bool first = true>(const auto self) {
+      if constexpr (not (N < sizeof...(Types))) return;
+      else {
+        if constexpr (not first) {
+          os << ',';
+        }
+        os << std::get<N>(tpl);
+
+        self.template operator()<N+1,false>(self);
+      }
+    };
+
+    inner.operator()(inner);
+  };
+
+  os << '(';
+  print_elements();
+  os << ')';
+
+  return os;
+}
+
+// Prittify pairs
+template<typename T, typename U>
+std::ostream& operator<<(std::ostream& os, const std::pair<T,U>& p) {
+    os << '(' << p.first << ',' << p.second << ')';
+
+    return os;
+}
+#endif

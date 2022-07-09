@@ -2,8 +2,8 @@
 // Created by xqtbl on 22. 5. 14.
 //
 
-#ifndef CPP20_LEARNING_LOCK_FREE_STACK_H
-#define CPP20_LEARNING_LOCK_FREE_STACK_H
+#ifndef CPP_IDEAS_LOCK_FREE_STACK_H
+#define CPP_IDEAS_LOCK_FREE_STACK_H
 #include <ranges>
 #include <atomic>
 #include <mutex>
