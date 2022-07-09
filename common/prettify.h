@@ -26,6 +26,10 @@ template <std::ranges::forward_range T>
                  std::is_same_v<std::decay_t<T>, std::string> ||
                  std::is_same_v<std::decay_t<T>, std::string_view> ||
                  std::is_same_v<std::decay_t<T>, char*>))
+/*requires requires (std::ostream& os, T x) {
+    os << x;
+  } // Legal on gcc, but error on clang: Infinte recursion of substitution
+*/
 std::ostream& operator<<(std::ostream& os, const T& rng) {
   os << '[';
   for (bool first = true; auto& element : rng) {
